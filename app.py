@@ -19,7 +19,7 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 app.secret_key = "c0e4ce9f2d5b4475dfc9b49034f3e61a87b1c96c6b8a405ebcfa7c4df388e73a"
-FRONTEND_URL = "https://vermillion-figolla-39d241.netlify.app"
+
 # STATIC / UPLOAD CONFIG
 # -----------------------------
 app.config["UPLOAD_FOLDER"] = "static"        # where menu & member photos are stored
@@ -405,7 +405,7 @@ def create_slot_token(slot: str) -> str:
     c.close()
     return token
 
-
+FRONTEND_URL = "https://vermillion-figolla-39d241.netlify.app"
 @app.route("/api/get-slot-qr")
 def get_slot_qr():
     """
@@ -438,7 +438,7 @@ def get_slot_qr():
         token = create_slot_token(slot)
 
     # Build QR image
-    url = FRONTEND-URL + "/?token=" + token
+    url = FRONTEND_URL + "/?token=" + token
     img = qrcode.make(url)
     buf = BytesIO()
     img.save(buf, format="PNG")
@@ -1001,6 +1001,7 @@ def export_logs():
 if __name__ == "__main__":
     # debug=True for local testing
     app.run(host="0.0.0.0", port=5000, debug=True)
+
 
 
 
