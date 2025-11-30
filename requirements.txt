@@ -1,0 +1,6 @@
+Flask
+gunicorn
+mysql-connector-python
+qrcode
+pillow
+python-dotenv

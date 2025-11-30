@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Canteen Admin Panel</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        background: #f8f9fa;
+        font-family: "Segoe UI";
+      }
+      .sidebar {
+        width: 240px;
+        height: 100vh;
+        background: white;
+        border-right: 1px solid #ddd;
+        position: fixed;
+        left: 0;
+        top: 0;
+        padding: 20px;
+        box-shadow: 1px 0 8px rgba(0, 0, 0, 0.1);
+      }
+      .sidebar a {
+        display: block;
+        padding: 10px;
+        color: #333;
+        margin-bottom: 8px;
+        border-radius: 6px;
+        text-decoration: none;
+      }
+      .sidebar a:hover {
+        background: #e9ecef;
+      }
+      .main {
+        margin-left: 260px;
+        padding: 25px;
+      }
+      .photo-preview {
+        width: 70px;
+        height: 70px;
+        border-radius: 6px;
+        object-fit: cover;
+        border: 1px solid #ccc;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <h3 class="mb-4">Admin Panel</h3>
+
+      <a href="#menuSection"><i class="bi bi-image"></i> Menu Photo</a>
+      <a href="#memberSection"><i class="bi bi-people"></i> Mess Members</a>
+      <a href="/admin2025-mess/qr"
+        ><i class="bi bi-qr-code"></i> QR Management</a
+      >
+      <a href="#messDaySection"
+        ><i class="bi bi-calendar-check"></i> Mess Summary</a
+      >
+      <a href="#logSection"><i class="bi bi-clock-history"></i> Scan Logs</a>
+
+      <hr />
+
+      <button id="exportLogsBtn" class="btn btn-success w-100 mb-2">
+        ⬇ Export Logs (Excel)
+      </button>
+
+      <button id="resetBtn" class="btn btn-warning w-100 mb-3">
+        <i class="bi bi-arrow-repeat"></i> Monthly Reset
+      </button>
+
+      <a href="/" class="text-danger"
+        ><i class="bi bi-box-arrow-right"></i> Logout</a
+      >
+    </div>
+
+    <!-- MAIN PANEL -->
+    <div class="main">
+      <!-- MENU PHOTO -->
+      <section id="menuSection" class="mb-5">
+        <h3>Today's Menu Photo</h3>
+        <div class="card p-3">
+          <div class="row">
+            <div class="col-md-6">
+              <label class="form-label fw-bold">Upload Menu Image</label>
+              <input
+                id="menuPhotoInput"
+                type="file"
+                accept="image/*"
+                class="form-control mb-2"
+              />
+              <button id="uploadMenuBtn" class="btn btn-primary mt-2">
+                Upload
+              </button>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold">Preview</label>
+              <div id="menuPhotoPreview" class="border rounded text-center p-2">
+                <span class="text-muted">No menu photo uploaded</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MEMBERS -->
+      <section id="memberSection" class="mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h3>Mess Members</h3>
+          <button
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#addMemberModal"
+          >
+            Add Member
+          </button>
+        </div>
+
+        <div class="card p-3">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Photo</th>
+                <th>Name</th>
+                <th>Roll</th>
+                <th>Allowed Slots</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="memberTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SUMMARY -->
+      <section id="messDaySection" class="mb-5">
+        <h3>Mess Summary</h3>
+        <div class="card p-3">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Used Days</th>
+                <th>Remaining</th>
+                <th>Carry Forward</th>
+              </tr>
+            </thead>
+            <tbody id="messDayTable"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- LOGS -->
+      <section id="logSection">
+        <h3>Scan Logs</h3>
+        <div class="card p-3">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Name</th>
+                <th>Slot</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="logsBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- ADD MEMBER MODAL -->
+    <div class="modal fade" id="addMemberModal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header"><h5>Add Member</h5></div>
+
+          <div class="modal-body">
+            <input
+              id="memberName"
+              class="form-control mb-2"
+              placeholder="Name"
+            />
+            <input
+              id="memberRoll"
+              class="form-control mb-2"
+              placeholder="Roll No"
+            />
+
+            <label class="form-label">Upload Photo (optional)</label>
+            <input
+              id="memberPhoto"
+              type="file"
+              accept="image/*"
+              class="form-control mb-3"
+            />
+
+            <label class="form-label">Allowed Slots</label><br />
+            <label
+              ><input type="checkbox" class="slotCheck" value="morning" />
+              Morning</label
+            >
+            <label
+              ><input type="checkbox" class="slotCheck" value="afternoon" />
+              Afternoon</label
+            >
+            <label
+              ><input type="checkbox" class="slotCheck" value="evening" />
+              Evening</label
+            >
+            <label
+              ><input type="checkbox" class="slotCheck" value="night" />
+              Night</label
+            >
+          </div>
+
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">
+              Cancel
+            </button>
+            <button id="saveMemberBtn" class="btn btn-primary">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCRIPT -->
+    <script>
+      /************ EXPORT LOGS ************/
+      document.getElementById("exportLogsBtn").onclick = async () => {
+        window.location.href = "/api/export-logs";
+        setTimeout(() => {
+          loadLogs(); // refresh logs (empty)
+        }, 2000);
+      };
+
+      /************ MENU PHOTO ************/
+      async function loadMenuPhoto() {
+        const r = await fetch("/api/menu-photo");
+        const d = await r.json();
+        const box = document.getElementById("menuPhotoPreview");
+
+        box.innerHTML = d.photo
+          ? `<img src="${d.photo}" class="img-fluid rounded">`
+          : "<span class='text-muted'>No menu photo uploaded</span>";
+      }
+
+      uploadMenuBtn.onclick = async () => {
+        const file = menuPhotoInput.files[0];
+        if (!file) return alert("Select image");
+
+        const form = new FormData();
+        form.append("photo", file);
+
+        const r = await fetch("/api/upload-menu-photo", {
+          method: "POST",
+          body: form,
+        });
+        const d = await r.json();
+        if (d.success) loadMenuPhoto();
+      };
+
+      /************ MEMBERS ************/
+      async function loadMembers() {
+        const r = await fetch("/api/members");
+        const data = await r.json();
+
+        const tbody = document.getElementById("memberTableBody");
+        tbody.innerHTML = "";
+
+        data.forEach((m) => {
+          const photo = m.photo || "/static/default.png";
+
+          tbody.innerHTML += `
+          <tr>
+            <td><img src="${photo}" class="photo-preview"></td>
+            <td>${m.name}</td>
+            <td>${m.roll_or_id}</td>
+            <td>${m.allowed_slots}</td>
+            <td><button class="btn btn-danger btn-sm" onclick="deleteMember(${m.id})">Delete</button></td>
+          </tr>`;
+        });
+      }
+
+      saveMemberBtn.onclick = async () => {
+        const name = memberName.value.trim();
+        const roll = memberRoll.value.trim();
+        const slots = [...document.querySelectorAll(".slotCheck:checked")]
+          .map((x) => x.value)
+          .join(",");
+
+        if (!name || !roll || !slots) return alert("Fill all fields");
+
+        const file = memberPhoto.files[0];
+        const form = new FormData();
+        form.append("name", name);
+        form.append("roll_or_id", roll);
+        form.append("allowed_slots", slots);
+        if (file) form.append("photo", file);
+
+        await fetch("/api/members", { method: "POST", body: form });
+
+        bootstrap.Modal.getInstance(
+          document.getElementById("addMemberModal")
+        ).hide();
+        loadMembers();
+        loadMessOverview();
+      };
+
+      async function deleteMember(id) {
+        if (!confirm("Delete?")) return;
+        await fetch("/api/member/" + id, { method: "DELETE" });
+        loadMembers();
+        loadMessOverview();
+      }
+
+      /************ MESS SUMMARY ************/
+      async function loadMessOverview() {
+        const r = await fetch("/api/mess-overview");
+        const data = await r.json();
+
+        const tbody = document.getElementById("messDayTable");
+        tbody.innerHTML = "";
+
+        data.forEach((u) => {
+          tbody.innerHTML += `
+          <tr>
+            <td>${u.name}</td>
+            <td>${u.used_days}</td>
+            <td>${u.remaining}</td>
+            <td>${u.carry_forward}</td>
+          </tr>`;
+        });
+      }
+
+      /************ LOAD LOGS ************/
+      async function loadLogs() {
+        const r = await fetch("/api/logs");
+        const data = await r.json();
+
+        const tbody = document.getElementById("logsBody");
+        tbody.innerHTML = "";
+
+        data.forEach((l) => {
+          tbody.innerHTML += `
+          <tr>
+            <td>${l.scanned_at}</td>
+            <td>${l.name}</td>
+            <td>${l.slot}</td>
+            <td>${
+              l.success
+                ? "<span class='badge bg-success'>Success</span>"
+                : "<span class='badge bg-danger'>Fail</span>"
+            }</td>
+          </tr>`;
+        });
+      }
+
+      /************ MONTH RESET ************/
+      resetBtn.onclick = async () => {
+        if (!confirm("Reset month?")) return;
+        await fetch("/api/reset-month");
+        alert("Reset completed");
+        loadMembers();
+        loadMessOverview();
+      };
+
+      loadMenuPhoto();
+      loadMembers();
+      loadMessOverview();
+      loadLogs();
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

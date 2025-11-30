@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Slot QR – Admin</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        background: #f4f6f9;
+        font-family: "Segoe UI", sans-serif;
+      }
+
+      .container-box {
+        max-width: 800px;
+        margin: auto;
+        padding-top: 30px;
+      }
+
+      .qr-card {
+        background: white;
+        border-radius: 14px;
+        padding: 30px;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.12);
+        transition: 0.3s;
+        animation: fadeIn 0.5s ease;
+        text-align: center;
+      }
+
+      .qr-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+      }
+
+      #slotText {
+        font-size: 22px;
+        font-weight: bold;
+        color: #0d6efd;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media print {
+        body * {
+          visibility: hidden;
+        }
+        #printArea,
+        #printArea * {
+          visibility: visible;
+        }
+        #printArea {
+          position: absolute;
+          top: 0;
+          left: 0;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container-box">
+      <h2 class="fw-bold mb-4 text-center">
+        <i class="bi bi-qr-code"></i> Mess – Current Slot QR
+      </h2>
+
+      <div class="mb-4">
+        <a href="/admin" class="btn btn-secondary">
+          <i class="bi bi-arrow-left"></i> Back to Dashboard
+        </a>
+      </div>
+
+      <!-- QR CARD -->
+      <div id="printArea">
+        <div class="qr-card mb-4">
+          <p id="slotText">Loading Slot...</p>
+          <img id="qrImage" src="" style="width: 200px" />
+          <br /><br />
+
+          <a
+            id="downloadBtn"
+            download="slot_qr.png"
+            class="btn btn-success me-2"
+          >
+            <i class="bi bi-download"></i> Download
+          </a>
+
+          <button class="btn btn-primary" onclick="window.print()">
+            <i class="bi bi-printer"></i> Print
+          </button>
+        </div>
+      </div>
+
+      <p class="text-center text-muted">Auto-refresh every 60 seconds</p>
+    </div>
+
+    <script>
+      async function loadQR() {
+        const r1 = await fetch("/api/current-slot");
+        const slotData = await r1.json();
+
+        const slot = slotData.slot;
+        document.getElementById("slotText").innerText =
+          slot.toUpperCase() + " SLOT QR";
+
+        const r2 = await fetch("/api/get-slot-qr");
+        const qrData = await r2.json();
+
+        if (!qrData.qr) {
+          document.getElementById("qrImage").src = "";
+          alert("QR not generated yet.");
+          return;
+        }
+
+        document.getElementById("qrImage").src = qrData.qr;
+        document.getElementById("downloadBtn").href = qrData.qr;
+      }
+
+      // Auto-refresh every 1 minute
+      setInterval(loadQR, 60000);
+
+      loadQR();
+    </script>
+  </body>
+</html>
