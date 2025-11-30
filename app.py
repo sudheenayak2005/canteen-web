@@ -5,6 +5,7 @@
 #  + Export Logs (Excel / CSV)
 # ================================
 from flask import Flask, request, jsonify, Response
+
 import mysql.connector
 from datetime import date, datetime
 import secrets
@@ -14,8 +15,9 @@ import base64
 import os
 import calendar
 import csv
-
+from flask_cors import CORS
 app = Flask(__name__)
+CORS(app)
 app.secret_key = "c0e4ce9f2d5b4475dfc9b49034f3e61a87b1c96c6b8a405ebcfa7c4df388e73a"
 
 # -----------------------------
@@ -1000,4 +1002,5 @@ def export_logs():
 if __name__ == "__main__":
     # debug=True for local testing
     app.run(host="0.0.0.0", port=5000, debug=True)
+
 
