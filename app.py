@@ -630,8 +630,8 @@ def save_scan(member_id, token, slot, success, message):
     cur = c.cursor()
     cur.execute(
         """
-        INSERT INTO scans(member_id,token,slot,valid_date,success,message)
-        VALUES(%s,%s,%s,%s,%s,%s)
+        INSERT INTO scans(member_id,token,slot,valid_date,success,message,scanned_at)
+        VALUES(%s,%s,%s,%s,%s,%s,NOW())
         """,
         (member_id, token, slot, date.today(), int(success), message),
     )
@@ -872,9 +872,13 @@ def logs():
     cur = c.cursor(dictionary=True)
     cur.execute(
         """
-        SELECT s.*, m.name 
+        SELECT 
+            DATE_FORMAT(s.scanned_at, '%%Y-%%m-%%d %%H:%%i:%%s') AS scanned_at,
+            m.name,
+            s.slot,
+            s.success
         FROM scans s
-        LEFT JOIN members m ON m.id=s.member_id
+        LEFT JOIN members m ON m.id = s.member_id
         ORDER BY s.scanned_at DESC
         LIMIT 200
         """
@@ -883,7 +887,6 @@ def logs():
     cur.close()
     c.close()
     return jsonify(rows)
-
 
 @app.route("/api/mess-status")
 def mess_status():
@@ -1001,6 +1004,7 @@ def export_logs():
 if __name__ == "__main__":
     # debug=True for local testing
     app.run(host="0.0.0.0", port=5000, debug=True)
+
 
 
 
