@@ -887,7 +887,6 @@ def logs():
     cur.close()
     c.close()
     return jsonify(rows)
-
 @app.route("/api/mess-status")
 def mess_status():
     member_id = request.args.get("id", 1)
@@ -1004,6 +1003,7 @@ def export_logs():
 if __name__ == "__main__":
     # debug=True for local testing
     app.run(host="0.0.0.0", port=5000, debug=True)
+
 
 
 
