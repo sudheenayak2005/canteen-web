@@ -405,7 +405,7 @@ def create_slot_token(slot: str) -> str:
     c.close()
     return token
 
-FRONTEND_URL = "https://cecmess.netlify.app"
+FRONTEND_URL = os.getenv("FRONTEND_URL","https://cecmess.netlify.app")
 @app.route("/api/get-slot-qr")
 def get_slot_qr():
     """
@@ -1003,6 +1003,7 @@ def export_logs():
 if __name__ == "__main__":
     # debug=True for local testing
     app.run(host="0.0.0.0", port=5000, debug=True)
+
 
 
 
