@@ -33,11 +33,11 @@ os.makedirs(MEMBERS_FOLDER, exist_ok=True)
 # MYSQL DATABASE CONFIG
 # -----------------------------
 DB = {
-    "host": os.getenv("DB_HOST"),
-    "user": os.getenv("DB_USER"),
-    "password": os.getenv("DB_PASSWORD"),
-    "database": os.getenv("DB_NAME"),
-    "port": os.getenv("DB_PORT"),
+    "host": os.getenv("MYSQL_HOST"),
+    "user": os.getenv("MYSQL_USER"),
+    "password": os.getenv("MYSQL_PASSWORD"),
+    "database": os.getenv("MYSQL_NAME"),
+    "port": os.getenv("MYSQL_PORT"),
 }
 
 
@@ -1003,6 +1003,7 @@ def export_logs():
 if __name__ == "__main__":
     # debug=True for local testing
     app.run(host="0.0.0.0", port=5000, debug=True)
+
 
 
 
