@@ -73,7 +73,7 @@ def get_member_photo_url(member_id: int):
 @app.route("/")
 def student_page():
     # Student main page (scanner + summary + menu photo)
-    return open("main.html", encoding="utf-8").read()
+    return open("index.html", encoding="utf-8").read()
 
 
 @app.route("/admin2025-mess")
@@ -1003,6 +1003,7 @@ def export_logs():
 if __name__ == "__main__":
     # debug=True for local testing
     app.run(host="0.0.0.0", port=5000, debug=True)
+
 
 
 
