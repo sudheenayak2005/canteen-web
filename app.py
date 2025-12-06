@@ -637,8 +637,8 @@ def save_scan(member_id, token, slot, success, message):
     cur = c.cursor()
     cur.execute(
         """
-        INSERT INTO scans(member_id,token,slot,valid_date,success,message,scanned_at)
-        VALUES(%s,%s,%s,%s,%s,%s,NOW())
+        INSERT INTO scans(member_id,token,slot,valid_date,success,message)
+        VALUES(%s,%s,%s,%s,%s,%s)
         """,
         (member_id, token, slot, date.today(), int(success), message),
     )
@@ -1007,6 +1007,7 @@ def export_logs():
 if __name__ == "__main__":
     # debug=True for local testing
     app.run(host="0.0.0.0", port=5000, debug=True)
+
 
 
 
