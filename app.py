@@ -879,11 +879,8 @@ def logs():
     cur = c.cursor(dictionary=True)
     cur.execute(
         """
-        SELECT 
-        scanned_at,
+        SELECT s.*,
             m.name,
-            s.slot,
-            s.success
         FROM scans s
         LEFT JOIN members m ON m.id = s.member_id
         ORDER BY s.scanned_at DESC
@@ -1013,6 +1010,7 @@ def export_logs():
 if __name__ == "__main__":
     # debug=True for local testing
     app.run(host="0.0.0.0", port=5000, debug=True)
+
 
 
 
