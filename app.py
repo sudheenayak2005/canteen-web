@@ -880,7 +880,7 @@ def logs():
     cur.execute(
         """
         SELECT 
-            DATE_FORMAT(CONVERT_TZ(s.scanned_at,'+00:00','+05:30'), '%%Y-%%m-%%d %%H:%%i:%%s') AS scanned_at,
+        scanned_at,
             m.name,
             s.slot,
             s.success
@@ -891,6 +891,9 @@ def logs():
         """
     )
     rows = cur.fetchall()
+    for r in rows:
+        if r["scanned_at"]:
+        r["scanned_at"]= r["scanned_at"].strftime("%Y-%m-%d%H:%M:%S")
     cur.close()
     c.close()
     return jsonify(rows)
@@ -1010,6 +1013,7 @@ def export_logs():
 if __name__ == "__main__":
     # debug=True for local testing
     app.run(host="0.0.0.0", port=5000, debug=True)
+
 
 
 
