@@ -4,5 +4,6 @@ gunicorn
 mysql-connector-python
 qrcode
 pillow
-
+pytz
 python-dotenv
+
