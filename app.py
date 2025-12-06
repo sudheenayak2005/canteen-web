@@ -880,7 +880,7 @@ def logs():
     cur.execute(
         """
         SELECT 
-            DATE_FORMAT(s.scanned_at, '%%Y-%%m-%%d %%H:%%i:%%s') AS scanned_at,
+            DATE_FORMAT(CONVERT_TZ(s.scanned_at,'+00:00','+05:30'), '%%Y-%%m-%%d %%H:%%i:%%s') AS scanned_at,
             m.name,
             s.slot,
             s.success
@@ -1010,6 +1010,7 @@ def export_logs():
 if __name__ == "__main__":
     # debug=True for local testing
     app.run(host="0.0.0.0", port=5000, debug=True)
+
 
 
 
