@@ -19,6 +19,9 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
+
+IST=pytz.timezone("Asia/Kolkata")
+
 app.secret_key = "c0e4ce9f2d5b4475dfc9b49034f3e61a87b1c96c6b8a405ebcfa7c4df388e73a"
 
 # STATIC / UPLOAD CONFIG
@@ -94,8 +97,8 @@ def admin_qr_page():
 # ============================================================
 
 def get_current_slot():
-
-    h = datetime.now().hour
+    now=datetime.now(IST)
+    h = now.hour
     if 6 <= h < 10:
         return "morning"
     elif 11 <= h < 14:
