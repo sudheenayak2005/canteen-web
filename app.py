@@ -880,7 +880,7 @@ def logs():
     cur.execute(
         """
         SELECT s.*,
-            m.name,
+            m.name
         FROM scans s
         LEFT JOIN members m ON m.id = s.member_id
         ORDER BY s.scanned_at DESC
@@ -888,9 +888,6 @@ def logs():
         """
     )
     rows = cur.fetchall()
-    for r in rows:
-        if r["scanned_at"]:
-        r["scanned_at"]= r["scanned_at"].strftime("%Y-%m-%d%H:%M:%S")
     cur.close()
     c.close()
     return jsonify(rows)
@@ -1010,6 +1007,7 @@ def export_logs():
 if __name__ == "__main__":
     # debug=True for local testing
     app.run(host="0.0.0.0", port=5000, debug=True)
+
 
 
 
