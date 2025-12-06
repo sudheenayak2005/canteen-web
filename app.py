@@ -93,11 +93,11 @@ def admin_qr_page():
 # ============================================================
 def get_current_slot():
     h = datetime.now().hour
-    if 6 <= h < 11:
+    if 6 <= h < 10:
         return "morning"
-    elif 11 <= h < 15:
+    elif 11 <= h < 14:
         return "afternoon"
-    elif 15 <= h < 19:
+    elif 15 <= h < 18:
         return "evening"
     else:
         return "night"
@@ -1003,6 +1003,7 @@ def export_logs():
 if __name__ == "__main__":
     # debug=True for local testing
     app.run(host="0.0.0.0", port=5000, debug=True)
+
 
 
 
