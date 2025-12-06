@@ -102,9 +102,9 @@ def get_current_slot():
     h = now.hour
     if 6 <= h < 10:
         return "morning"
-    elif 11 <= h < 14:
+    elif 11 <= h < 2:
         return "afternoon"
-    elif 15 <= h < 18:
+    elif 15 <= h < 6:
         return "evening"
     else:
         return "night"
@@ -1007,6 +1007,7 @@ def export_logs():
 if __name__ == "__main__":
     # debug=True for local testing
     app.run(host="0.0.0.0", port=5000, debug=True)
+
 
 
 
