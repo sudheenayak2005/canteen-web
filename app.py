@@ -15,10 +15,7 @@ import base64
 import os
 import calendar
 import csv
-import pytz
 from flask_cors import CORS
-
- IST=pytz.timezone("Asia/Kolkata")
 
 app = Flask(__name__)
 CORS(app)
@@ -97,8 +94,8 @@ def admin_qr_page():
 # ============================================================
 
 def get_current_slot():
-   now=datetime.now(IST)
-    h = now.hour
+
+    h = datetime.now().hour
     if 6 <= h < 10:
         return "morning"
     elif 11 <= h < 14:
@@ -1009,6 +1006,7 @@ def export_logs():
 if __name__ == "__main__":
     # debug=True for local testing
     app.run(host="0.0.0.0", port=5000, debug=True)
+
 
 
 
